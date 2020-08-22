@@ -1,6 +1,7 @@
 import 'dart:html';
 import 'package:redux/redux.dart';
 import 'package:redux_saga/redux_saga.dart';
+import 'package:saga_monitor/saga_monitor.dart';
 
 void render(int state) {
   querySelector('#value').innerHtml = '$state';
@@ -33,7 +34,17 @@ counterSaga() sync* {
 }
 
 void main() {
-  var sagaMiddleware = createSagaMiddleware();
+  var monitor = SimpleSagaMonitor(
+      onLog: (SimpleSagaMonitor monitor) {
+        var lines = monitor.getLines();
+        String s = '';
+        lines.forEach((element) {
+          s += element + '</br>';
+        });
+        querySelector('#monitor').innerHtml = s;
+      });
+
+  var sagaMiddleware = createSagaMiddleware(Options(sagaMonitor: monitor));
 
   // Create store and apply middleware
   final store = Store(
