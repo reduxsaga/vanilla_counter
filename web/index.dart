@@ -23,7 +23,7 @@ class DecrementAction {}
 
 class IncrementAsyncAction {}
 
-incrementAsync() sync* {
+incrementAsync({action}) sync* {
   yield Delay(Duration(seconds: 1));
   yield Put(IncrementAction());
 }
